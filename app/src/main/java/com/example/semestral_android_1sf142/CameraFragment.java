@@ -1,7 +1,6 @@
 package com.example.semestral_android_1sf142;
 
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,10 +15,11 @@ import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.video.OutputOptions;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -38,13 +38,13 @@ public class CameraFragment extends Fragment
 
     private ImageButton settingsBtn;
     private ImageButton takePhotoBtn;
-    private ImageButton listPhotoBtn;
+    private ImageButton galleryBtn;
 
     private ExecutorService cameraExecutor;
 
     // Camera
 
-    ImageCapture imageCapture;
+    private ImageCapture imageCapture;
 
     public CameraFragment()
     {
@@ -59,11 +59,11 @@ public class CameraFragment extends Fragment
 
         this.settingsBtn = requireView().findViewById(R.id.settings_btn);
         this.takePhotoBtn = requireView().findViewById(R.id.take_photo_btn);
-        this.listPhotoBtn = requireView().findViewById(R.id.list_photo_btn);
+        this.galleryBtn = requireView().findViewById(R.id.gallery_btn);
 
         this.settingsBtn.setOnClickListener(v -> handleSettingsBtn());
         this.takePhotoBtn.setOnClickListener(v -> handleTakePhotoBtn());
-        this.listPhotoBtn.setOnClickListener(v -> handleListPhotoBtn());
+        this.galleryBtn.setOnClickListener(v -> handleGalleryBtn());
 
         this.cameraExecutor = Executors.newSingleThreadExecutor();
 
@@ -90,10 +90,13 @@ public class CameraFragment extends Fragment
         takePhoto();
     }
 
-    // TODO
-    private void handleListPhotoBtn()
+    private void handleGalleryBtn()
     {
-
+        FragmentManager manager = this.getParentFragmentManager();
+        final FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.fragment_container, new GalleryFragment(), null);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     /*

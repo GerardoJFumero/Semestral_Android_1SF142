@@ -37,13 +37,13 @@
             android:contentDescription="@string/take_photo_btn_desc" />
 
         <ImageButton
-            android:id="@+id/list_photo_btn"
+            android:id="@+id/gallery_btn"
             android:layout_width="65dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_baseline_photo_library_24"
             android:scaleType="fitCenter"
-            android:contentDescription="@string/list_photo_btn_desc" />
+            android:contentDescription="@string/gallery_btn_desc" />
     </RelativeLayout>
 
 </RelativeLayout>

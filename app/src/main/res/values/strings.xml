@@ -2,5 +2,8 @@
     <string name="app_name">Semestral Android 1SF142</string>
     <string name="settings_btn_desc">Configuracion</string>
     <string name="take_photo_btn_desc">Tomar Foto</string>
-    <string name="list_photo_btn_desc">Ver Fotos</string>
+    <string name="gallery_btn_desc">Ver Fotos</string>
+    <string name="gallery_back_btn">atras</string>
+    <string name="delete_btn">Borrar</string>
+    <string name="gallery_tv">Galeria</string>
 </resources>

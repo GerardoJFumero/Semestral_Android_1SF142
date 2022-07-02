@@ -4,7 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Luisf/AndroidStudioProjects/UTP/Semestral_Android_1SF142/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/Luisf/AndroidStudioProjects/UTP/Semestral_Android_1SF142/app/src/main/res/layout/fragment_camera.xml" value="0.1" />
+        <entry key="..\:/Users/Luisf/AndroidStudioProjects/UTP/Semestral_Android_1SF142/app/src/main/res/layout/fragment_camera.xml" value="0.25" />
+        <entry key="..\:/Users/Luisf/AndroidStudioProjects/UTP/Semestral_Android_1SF142/app/src/main/res/layout/fragment_gallery.xml" value="0.256857855361596" />
+        <entry key="..\:/Users/Luisf/AndroidStudioProjects/UTP/Semestral_Android_1SF142/app/src/main/res/layout/gallery_item.xml" value="0.371875" />
       </map>
     </option>
   </component>

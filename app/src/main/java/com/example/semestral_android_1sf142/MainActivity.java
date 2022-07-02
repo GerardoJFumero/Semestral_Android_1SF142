@@ -8,12 +8,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentContainerView;
 
 public class MainActivity extends AppCompatActivity
 {
     private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private FragmentContainerView fragmentContainerView;
+    private static final int REQUEST_WRITE_PERMISSION = 400;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +25,15 @@ public class MainActivity extends AppCompatActivity
             requestCameraPermission();
         }
 
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            requestWritePermission();
+        }
+
         if (savedInstanceState == null)
         {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.camera_fragment, CameraFragment.class,null)
+                    .add(R.id.fragment_container, CameraFragment.class,null)
                     .commit();
         }
     }
@@ -42,7 +46,15 @@ public class MainActivity extends AppCompatActivity
         {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
             {
-                Toast.makeText(getApplicationContext(), "Necesita darle permiso a la camara", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Necesita dar los permisos a la camara", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+        else if (requestCode == REQUEST_WRITE_PERMISSION)
+        {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(getApplicationContext(), "Necesita dar los permisos para leer archivos", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -53,5 +65,12 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.CAMERA
         }, REQUEST_CAMERA_PERMISSION);
+    }
+
+    private void requestWritePermission()
+    {
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, REQUEST_WRITE_PERMISSION);
     }
 }
