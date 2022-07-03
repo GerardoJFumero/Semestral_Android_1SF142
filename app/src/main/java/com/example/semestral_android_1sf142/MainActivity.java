@@ -9,15 +9,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
 {
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private static final int REQUEST_WRITE_PERMISSION = 400;
 
+    private boolean needsFileListUpdate;
+    private List<String> mFilesList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.needsFileListUpdate = true;
 
         // Check realtime permissions if run higher API 23
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
@@ -72,5 +79,37 @@ public class MainActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         }, REQUEST_WRITE_PERMISSION);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        setNeedsFileListUpdate(true);
+    }
+
+    /*
+        Getters & Settters
+     */
+
+    public boolean isNeedsFileListUpdate()
+    {
+        return needsFileListUpdate;
+    }
+
+    public void setNeedsFileListUpdate(boolean needsFileListUpdate)
+    {
+        this.needsFileListUpdate = needsFileListUpdate;
+    }
+
+    public void loadFileList()
+    {
+        this.mFilesList = MediaUtils.findMediaFiles(this);
+        setNeedsFileListUpdate(false);
+    }
+
+    public List<String> getmFilesList()
+    {
+        return mFilesList;
     }
 }

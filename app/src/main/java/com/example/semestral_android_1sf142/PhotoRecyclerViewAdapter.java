@@ -1,7 +1,12 @@
 package com.example.semestral_android_1sf142;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.CustomViewHolder>
@@ -40,10 +46,13 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position)
     {
-        File file = new File(mFileList.get(position));
-        Uri uri = Uri.fromFile(file);
+//        File file = new File(mFileList.get(position));
+//        Uri uri = Uri.fromFile(file);
+        Bitmap bitmap = BitmapFactory.decodeFile(mFileList.get(position));
+        Drawable image = new BitmapDrawable(this.mActivity.getResources(), bitmap);
 
-        holder.imageResource.setImageURI(uri);
+//        holder.imageResource.setImageURI(uri);
+        holder.imageResource.setImageDrawable(image);
 
         final int itemPosition = holder.getAdapterPosition();
         holder.imageResource.setOnClickListener(v ->

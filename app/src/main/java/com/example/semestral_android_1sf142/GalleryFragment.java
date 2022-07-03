@@ -28,9 +28,6 @@ public class GalleryFragment extends Fragment
     private ImageButton backBtn;
     private ProgressBar progressBar;
 
-    // Photos
-    private List<String> mFilesList;
-
     public GalleryFragment()
     {
         super(R.layout.fragment_gallery);
@@ -53,11 +50,18 @@ public class GalleryFragment extends Fragment
 
         new Thread(() ->
         {
-            mFilesList = MediaUtils.findMediaFiles(requireActivity());
+            MainActivity mainActivity = (MainActivity) requireActivity();
+            if (mainActivity.isNeedsFileListUpdate())
+            {
+                mainActivity.loadFileList();
+            }
+
             requireActivity().runOnUiThread(() ->
             {
+                PhotoRecyclerViewAdapter adapter = new PhotoRecyclerViewAdapter(mainActivity.getmFilesList(), requireActivity());
+
+                recyclerView.setAdapter(adapter);
                 progressBar.setVisibility(View.INVISIBLE);
-                recyclerView.setAdapter(new PhotoRecyclerViewAdapter(mFilesList, requireActivity()));
             });
 
         }).start();

@@ -33,7 +33,6 @@ import java.util.List;
 
 public class GalleryPagerFragment extends Fragment
 {
-
     // Views
     private ViewPager2 galleryPager;
 
@@ -150,6 +149,7 @@ public class GalleryPagerFragment extends Fragment
                     Toast.makeText(requireActivity(), "Error Renaming File", Toast.LENGTH_SHORT).show();
                 }
 
+                ((MainActivity) requireActivity()).setNeedsFileListUpdate(true);
                 dialog.dismiss();
             });
         });
@@ -179,6 +179,7 @@ public class GalleryPagerFragment extends Fragment
                         }
 
                         this.mFilesList.remove(selectedItem);
+                        ((MainActivity) requireActivity()).setNeedsFileListUpdate(true);
                         popBackStack();
                     })
                 .setNegativeButton("No", (dialog, which) -> dialog.dismiss());

@@ -38,7 +38,7 @@ public class MediaUtils
                 imagesUri,
                 projection,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ?",
-                new String[] {FOLDER_NAME},
+                new String[]{FOLDER_NAME},
                 orderBy);
 
         if (cursor != null)
@@ -99,7 +99,7 @@ public class MediaUtils
 
             c.close();
         }
-            return valid;
+        return valid;
     }
 
     public static boolean renameFile(String path, String newName, Context context)
@@ -107,63 +107,61 @@ public class MediaUtils
         boolean valid = false;
 
         File file = new File(path);
-        if (file.exists())
+
+        String[] projection = {MediaStore.Images.Media._ID};
+
+        // Match file path
+        String selection = MediaStore.Images.Media.DATA + " = ?";
+        String[] selectionArgs = new String[]{file.getAbsolutePath()};
+
+        // Query id file path match
+        Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+        if (c.moveToFirst())
         {
-            String[] projection = {MediaStore.Images.Media._ID};
+            // found id
+            long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+            Uri editUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-            // Match file path
-            String selection = MediaStore.Images.Media.DATA + " = ?";
-            String[] selectionArgs = new String[]{file.getAbsolutePath()};
+            ContentValues contentValues = new ContentValues();
 
-            // Query id file path match
-            Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            ContentResolver contentResolver = context.getContentResolver();
-            Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
-            if (c.moveToFirst())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
             {
-                // found id
-                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-                Uri editUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-                ContentValues contentValues = new ContentValues();
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                {
-                    contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 1);
-                    contentResolver.update(editUri, contentValues, null,null);
-                }
-
-                contentValues.clear();
-                contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, newName);
-
-                if (Build.VERSION.SDK_INT >= 29) {
-
-                    contentValues.put(MediaStore.Images.Media.RELATIVE_PATH,
-                            Environment.DIRECTORY_PICTURES + "/" + MediaUtils.FOLDER_NAME);
-
-                }
-                else
-                {
-
-                    String newPath = Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_PICTURES) + "/" + MediaUtils.FOLDER_NAME + "/" + newName + ".jpg";
-
-                    contentValues.put(MediaStore.Images.Media.DATA, newPath);
-
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                {
-                    contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 0);
-                }
-
-                contentResolver.update(editUri, contentValues, null,null);
-
-                valid = true;
+                contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 1);
+                contentResolver.update(editUri, contentValues, null, null);
             }
 
-            c.close();
+            contentValues.clear();
+            contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, newName);
+
+            if (Build.VERSION.SDK_INT >= 29)
+            {
+
+                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH,
+                        Environment.DIRECTORY_PICTURES + "/" + MediaUtils.FOLDER_NAME);
+
+            }
+            else
+            {
+                String newPath = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES) + "/" + MediaUtils.FOLDER_NAME + "/" + newName + ".jpg";
+
+                contentValues.put(MediaStore.Images.Media.DATA, newPath);
+
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            {
+                contentValues.put(MediaStore.Files.FileColumns.IS_PENDING, 0);
+            }
+
+            contentResolver.update(editUri, contentValues, null, null);
+
+            valid = true;
         }
+
+        c.close();
 
         return valid;
     }
