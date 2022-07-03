@@ -3,7 +3,9 @@ package com.example.semestral_android_1sf142;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,10 +26,10 @@ public class GalleryFragment extends Fragment
     private RecyclerView recyclerView;
 
     private ImageButton backBtn;
-    private ImageButton deleteBtn;
+    private ProgressBar progressBar;
 
     // Photos
-    List<String> mFilesList;
+    private List<String> mFilesList;
 
     public GalleryFragment()
     {
@@ -42,15 +45,22 @@ public class GalleryFragment extends Fragment
         this.recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 3));
         this.recyclerView.setHasFixedSize(true);
 
-        this.mFilesList = MediaUtils.findMediaFiles(requireActivity());
-
-        this.recyclerView.setAdapter(new PhotoRecyclerViewAdapter(this.mFilesList, requireActivity()));
-
         this.backBtn = requireView().findViewById(R.id.gallery_back_btn);
-//        this.deleteBtn = requireView().findViewById(R.id.gallery_delete_btn);
 
         this.backBtn.setOnClickListener(v -> handleBackBtn());
-//        this.deleteBtn.setOnClickListener(v -> handleDeleteBtn());
+
+        this.progressBar = requireView().findViewById(R.id.progressBar);
+
+        new Thread(() ->
+        {
+            mFilesList = MediaUtils.findMediaFiles(requireActivity());
+            requireActivity().runOnUiThread(() ->
+            {
+                progressBar.setVisibility(View.INVISIBLE);
+                recyclerView.setAdapter(new PhotoRecyclerViewAdapter(mFilesList, requireActivity()));
+            });
+
+        }).start();
     }
 
     /*
@@ -61,10 +71,5 @@ public class GalleryFragment extends Fragment
     {
         FragmentManager manager = this.getParentFragmentManager();
         manager.popBackStack();
-    }
-
-    private void handleDeleteBtn()
-    {
-
     }
 }

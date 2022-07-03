@@ -39,22 +39,52 @@
             app:layout_constraintStart_toEndOf="@id/photo_back_btn"
             android:text="@string/gallery_tv" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/photo_edit_button"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/roundcorner"
+            app:srcCompat="@drawable/ic_baseline_edit_24" />
+
         <ImageButton
             android:id="@+id/photo_delete_button"
             android:layout_width="50dp"
             android:layout_height="48dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/roundcorner"
             app:srcCompat="@drawable/ic_baseline_delete_24" />
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/gallery_pager" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/gallery_pager" />
+
 
 </LinearLayout>

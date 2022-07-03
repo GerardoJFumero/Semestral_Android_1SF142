@@ -47,8 +47,9 @@ public class CameraFragment extends Fragment
     private ExecutorService cameraExecutor;
 
     // Camera
-
     private ImageCapture imageCapture;
+
+    private FragmentManager manager;
 
     public CameraFragment()
     {
@@ -58,6 +59,8 @@ public class CameraFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        this.manager = this.getParentFragmentManager();
 
         this.viewFinder = requireView().findViewById(R.id.view_finder);
 
@@ -100,8 +103,7 @@ public class CameraFragment extends Fragment
 
     private void loadFragment(Fragment fragment)
     {
-        FragmentManager manager = this.getParentFragmentManager();
-        final FragmentTransaction ft = manager.beginTransaction();
+        final FragmentTransaction ft = this.manager.beginTransaction();
         ft.replace(R.id.fragment_container, fragment, null);
         ft.addToBackStack(null);
         ft.commit();
@@ -195,10 +197,18 @@ public class CameraFragment extends Fragment
         Clean up
      */
 
+
     @Override
     public void onDestroy()
     {
         super.onDestroy();
+        this.cameraExecutor.shutdown();
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
         this.cameraExecutor.shutdown();
     }
 }

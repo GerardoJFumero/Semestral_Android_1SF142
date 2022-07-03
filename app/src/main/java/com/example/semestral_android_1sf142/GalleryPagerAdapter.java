@@ -37,10 +37,6 @@ public class GalleryPagerAdapter extends RecyclerView.Adapter<GalleryPagerAdapte
     {
         File file = new File(mFileList.get(position));
         Uri uri = Uri.fromFile(file);
-
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(200, 200);
-//        holder.imageResource.setLayoutParams(params);
-
         holder.imageResource.setImageURI(uri);
     }
 
