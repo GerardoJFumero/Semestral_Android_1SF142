@@ -1,8 +1,10 @@
 package com.example.semestral_android_1sf142;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -50,7 +53,6 @@ public class GalleryFragment extends Fragment
 //        this.deleteBtn.setOnClickListener(v -> handleDeleteBtn());
     }
 
-
     /*
         Button Handlers
      */
@@ -63,5 +65,6 @@ public class GalleryFragment extends Fragment
 
     private void handleDeleteBtn()
     {
+
     }
 }

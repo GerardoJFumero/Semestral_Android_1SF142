@@ -43,18 +43,14 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
         File file = new File(mFileList.get(position));
         Uri uri = Uri.fromFile(file);
 
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(200, 200);
-//        holder.imageResource.setLayoutParams(params);
-
         holder.imageResource.setImageURI(uri);
 
         final int itemPosition = holder.getAdapterPosition();
         holder.imageResource.setOnClickListener(v ->
                 {
-//                    Toast.makeText(mActivity, mFileList.get(itemPosition), Toast.LENGTH_SHORT).show();
                     FragmentManager manager = ((AppCompatActivity) this.mActivity).getSupportFragmentManager();
                     final FragmentTransaction ft = manager.beginTransaction();
-                    ft.replace(R.id.fragment_container, new GalleryPagerFragment(itemPosition), null);
+                    ft.replace(R.id.fragment_container, new GalleryPagerFragment(itemPosition, mFileList), null);
                     ft.addToBackStack(null);
                     ft.commit();
                 }

@@ -144,26 +144,19 @@ public class CameraFragment extends Fragment
         // Safe to ignore API warning
         contentValues.put(MediaStore.MediaColumns.DATE_TAKEN, System.currentTimeMillis());
 
-        File photoDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "CameraX-Images");
-        if (!photoDir.exists())
-        {
-            if (!photoDir.mkdirs())
-            {
-                Toast.makeText(requireActivity(), "Error creando folder de imagenes", Toast.LENGTH_SHORT).show();
-            }
-        }
+        MediaUtils.checkMediaFolder();
 
         if (Build.VERSION.SDK_INT >= 29) {
 
             contentValues.put(MediaStore.Images.Media.RELATIVE_PATH,
-                    Environment.DIRECTORY_PICTURES + "/" + "CameraX-Images");
+                    Environment.DIRECTORY_PICTURES + "/" + MediaUtils.FOLDER_NAME);
 
         }
         else
         {
 
             String path = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES) + "/" + "CameraX-Images" + "/" + name + ".jpg";
+                    Environment.DIRECTORY_PICTURES) + "/" + MediaUtils.FOLDER_NAME + "/" + name + ".jpg";
 
             contentValues.put(MediaStore.Images.Media.DATA, path);
 

@@ -1,8 +1,16 @@
 package com.example.semestral_android_1sf142;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -30,10 +38,11 @@ public class GalleryPagerFragment extends Fragment
     // Photos
     List<String> mFilesList;
 
-    public GalleryPagerFragment(int selectedImage)
+    public GalleryPagerFragment(int selectedImage, List<String> mFilesList)
     {
         super(R.layout.fragment_gallery_pager);
         this.selectedImage = selectedImage;
+        this.mFilesList = mFilesList;
     }
 
     @Override
@@ -43,7 +52,7 @@ public class GalleryPagerFragment extends Fragment
 
         this.galleryPager = requireView().findViewById(R.id.gallery_pager);
 
-        this.mFilesList = MediaUtils.findMediaFiles(requireActivity());
+        //this.mFilesList = MediaUtils.findMediaFiles(requireActivity());
 
         this.galleryPager.setAdapter(new GalleryPagerAdapter(this.mFilesList, requireActivity()));
         this.galleryPager.setCurrentItem(selectedImage, false);
@@ -71,9 +80,11 @@ public class GalleryPagerFragment extends Fragment
 
         builder.setPositiveButton("Si", (dialog, which) ->
         {
-            String path = mFilesList.get(galleryPager.getCurrentItem());
+            int selectedItem = this.galleryPager.getCurrentItem();
+            String path = this.mFilesList.get(selectedItem);
             deleteFile(path);
 
+            this.mFilesList.remove(selectedItem);
             popBackStack();
         });
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
@@ -91,15 +102,29 @@ public class GalleryPagerFragment extends Fragment
         File file = new File(path);
         if (file.exists())
         {
-            if (file.delete())
+            String[] projection = {MediaStore.Images.Media._ID};
+
+            // Match file path
+            String selection = MediaStore.Images.Media.DATA + " = ?";
+            String[] selectionArgs = new String[]{file.getAbsolutePath()};
+
+            // Query id file path match
+            Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            ContentResolver contentResolver = requireActivity().getContentResolver();
+            Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+            if (c.moveToFirst())
             {
-                Toast.makeText(requireActivity(), "file Deleted :" + path, Toast.LENGTH_SHORT).show();
+                // found id
+                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+                Uri deleteUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                contentResolver.delete(deleteUri, null, null);
+                Toast.makeText(requireActivity(), "File Deleted:" + path, Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(requireActivity(), "file not Deleted :" + path, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(requireActivity(), "ERROR File not Deleted:" + path, Toast.LENGTH_SHORT).show();
             }
+            c.close();
         }
     }
 
