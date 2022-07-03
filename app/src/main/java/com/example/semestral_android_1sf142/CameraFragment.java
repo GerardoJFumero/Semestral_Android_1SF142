@@ -78,10 +78,9 @@ public class CameraFragment extends Fragment
         Button Handlers
      */
 
-    // TODO
     private void handleSettingsBtn()
     {
-
+        loadFragment(new SettingsFragment());
     }
 
     private void handleTakePhotoBtn()
@@ -96,9 +95,14 @@ public class CameraFragment extends Fragment
 
     private void handleGalleryBtn()
     {
+        loadFragment(new GalleryFragment());
+    }
+
+    private void loadFragment(Fragment fragment)
+    {
         FragmentManager manager = this.getParentFragmentManager();
         final FragmentTransaction ft = manager.beginTransaction();
-        ft.replace(R.id.fragment_container, new GalleryFragment(), null);
+        ft.replace(R.id.fragment_container, fragment, null);
         ft.addToBackStack(null);
         ft.commit();
     }

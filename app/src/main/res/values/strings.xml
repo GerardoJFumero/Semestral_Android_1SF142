@@ -6,4 +6,10 @@
     <string name="gallery_back_btn">atras</string>
     <string name="delete_btn">Borrar</string>
     <string name="gallery_tv">Galeria</string>
+    <string name="settings_tv">Configuracion</string>
+    <string name="nombres_automaticos">Nombres Automaticos</string>
+    <string name="intregrantes_grupo_1sf142">Intregrantes Grupo 1SF142</string>
+    <string name="integrante_nombre_tv">Nombre</string>
+    <string name="integrante_cedula_tv">Cedula</string>
+
 </resources>
