@@ -1,9 +1,12 @@
 package com.example.semestral_android_1sf142;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -137,10 +141,32 @@ public class CameraFragment extends Fragment
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+        // Safe to ignore API warning
+        contentValues.put(MediaStore.MediaColumns.DATE_TAKEN, System.currentTimeMillis());
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+        File photoDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "CameraX-Images");
+        if (!photoDir.exists())
         {
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Images");
+            if (!photoDir.mkdirs())
+            {
+                Toast.makeText(requireActivity(), "Error creando folder de imagenes", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= 29) {
+
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH,
+                    Environment.DIRECTORY_PICTURES + "/" + "CameraX-Images");
+
+        }
+        else
+        {
+
+            String path = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES) + "/" + "CameraX-Images" + "/" + name + ".jpg";
+
+            contentValues.put(MediaStore.Images.Media.DATA, path);
+
         }
 
         ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(
