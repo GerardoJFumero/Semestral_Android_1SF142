@@ -6,9 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
@@ -18,8 +22,6 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
 {
     private final List<String> mFileList;
     private final Activity mActivity;
-
-    private int selectedImage;
 
     public PhotoRecyclerViewAdapter(List<String> mFileList, Activity mActivity)
     {
@@ -40,13 +42,21 @@ public class PhotoRecyclerViewAdapter extends RecyclerView.Adapter<PhotoRecycler
     {
         File file = new File(mFileList.get(position));
         Uri uri = Uri.fromFile(file);
+
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(200, 200);
+//        holder.imageResource.setLayoutParams(params);
+
         holder.imageResource.setImageURI(uri);
 
         final int itemPosition = holder.getAdapterPosition();
         holder.imageResource.setOnClickListener(v ->
                 {
-                    Toast.makeText(mActivity, mFileList.get(itemPosition), Toast.LENGTH_SHORT).show();
-                    this.selectedImage = itemPosition;
+//                    Toast.makeText(mActivity, mFileList.get(itemPosition), Toast.LENGTH_SHORT).show();
+                    FragmentManager manager = ((AppCompatActivity) this.mActivity).getSupportFragmentManager();
+                    final FragmentTransaction ft = manager.beginTransaction();
+                    ft.replace(R.id.fragment_container, new GalleryPagerFragment(itemPosition), null);
+                    ft.addToBackStack(null);
+                    ft.commit();
                 }
         );
     }
