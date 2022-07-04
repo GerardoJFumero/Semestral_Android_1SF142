@@ -181,6 +181,7 @@ public class CameraFragment extends Fragment
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults)
                     {
+                        ((MainActivity) requireActivity()).setNeedsFileListUpdate(true);
                         Toast.makeText(requireActivity(), "Saved as: Pictures/CameraX-Images/" + name + ".jpg" , Toast.LENGTH_SHORT).show();
                     }
 
